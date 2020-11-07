@@ -1,0 +1,24 @@
+{
+  "name": "chat-bubble",
+  "version": "1.3.1",
+  "description": "Simple chatbot UI for Web with JSON scripting. Zero dependencies.",
+  "main": "component/Bubble.js",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/dmitrizzle/chat-bubble.git"
+  },
+  "keywords": [
+    "chatbot",
+    "chat",
+    "bot",
+    "chatui",
+    "conversation",
+    "javascript"
+  ],
+  "author": "dmitrizzle",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/dmitrizzle/chat-bubble/issues"
+  },
+  "homepage": "https://github.com/dmitrizzle/chat-bubble#readme"
+}

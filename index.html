@@ -1,0 +1,266 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Advanced Chat Flows with chat-bubble</title>
+
+    <!-- for mobile screens -->
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <!-- stylesheets are conveniently separated into components -->
+    <link rel="stylesheet" media="all" href="../component/styles/setup.css">
+    <link rel="stylesheet" media="all" href="../component/styles/says.css">
+    <link rel="stylesheet" media="all" href="../component/styles/reply.css">
+    <link rel="stylesheet" media="all" href="../component/styles/typing.css">
+    <link rel="stylesheet" media="all" href="../component/styles/input.css">
+    <style>
+        body {
+            background: #e4e4e4;
+        }
+
+        .bubble-container {
+          height: 920px;
+          margin-top: 20px;
+          border-radius: 20px;
+          background: #f1f1f1;
+        }
+
+        .bubble-container .input-wrap textarea {
+            margin: 0;
+            width: calc(100% - 30px);
+        }
+
+        img {
+          width: 3px;
+          height: 500px;
+        }
+    </style>
+</head>
+
+<body>
+
+    <!-- container element for chat window -->
+    <div id="chat"></div>
+
+    <!-- import the JavaScript file -->
+    <script src="../component/Bubbles.js"></script>
+    <script>
+    // conversation object stored in separate variable:
+var convo = {
+  // "ice" (as in "breaking the ice") is a required conversation object
+  // that maps the first thing the bot will say to the user
+  ice: {
+    // "says" defines an array of sequential bubbles
+    // that the bot will produce
+    says: [
+      "Приветсвуем!",
+      "Пройдите тест на вакансию в нашем боте",
+      "Мы соберем статистику, и оценим ваши навыки",
+      "Это быстро...",
+      "...Можем начать ?",
+      "<img src=https://images-wixmp-ed30a86b8c4ca887773594c2.wixmp.com/f/12cbe8a4-f55c-4b40-85bb-d8e1405e7b84/dabkc9g-f93755a9-3660-41f9-95ed-b45d9f127970.gif?token=eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJ1cm46YXBwOjdlMGQxODg5ODIyNjQzNzNhNWYwZDQxNWVhMGQyNmUwIiwiaXNzIjoidXJuOmFwcDo3ZTBkMTg4OTgyMjY0MzczYTVmMGQ0MTVlYTBkMjZlMCIsIm9iaiI6W1t7InBhdGgiOiJcL2ZcLzEyY2JlOGE0LWY1NWMtNGI0MC04NWJiLWQ4ZTE0MDVlN2I4NFwvZGFia2M5Zy1mOTM3NTVhOS0zNjYwLTQxZjktOTVlZC1iNDVkOWYxMjc5NzAuZ2lmIn1dXSwiYXVkIjpbInVybjpzZXJ2aWNlOmZpbGUuZG93bmxvYWQiXX0.PAg8AGWVbYW2MEozxU9E_9ZKpFDyxNiP6KooQopj3N0 />"
+    ],
+    // "reply" is an array of possible options the user can pick from
+    // as a reply
+    reply: [
+      {
+        question: "asdsad", // label for the reply option
+        answer: "chapter-one" // key for the next conversation object
+      },
+      {
+        question: "Нет, спасибо", // label for the reply option
+        answer: "end" // key for an "escape valve"; we refer to this whenever a reply signals the end of the convo
+      },
+      {
+        question: "Зачем мне это?", // label for the reply option
+        answer: "sidetrack" // key for a "side note" we can reference from multiple points in the chat
+      }
+    ]
+  }, // end required "ice" conversation object
+
+  // side note
+  sidetrack: {
+    says: [
+      "Мы хотим изучить ваши взгляды",
+      "И выявить совпадут ли они с политикой компании",    
+    ],
+    reply: [
+      {
+        question: "Мне необходимо больше информации.",
+        answer: "intro-context" // key for another side note; in this instance, we're using it to contextualize the Q&A we're heading into
+      },
+      {
+        question: "Хорошо, продолжим!",
+        answer: "chapter-one" // no further sidetrack required, returning to the main conversation tree
+      }
+    ]
+  },
+
+  // another side note
+  "intro-context": {
+    says: [
+      "Нам сложно вам обьяснить текстом...",
+      "...Но вы можете с нами связаться и мы поговорим...",
+      "...+176448932",
+      "<img src=https://images-wixmp-ed30a86b8c4ca887773594c2.wixmp.com/f/12cbe8a4-f55c-4b40-85bb-d8e1405e7b84/dak6s74-465171e5-27da-4de8-9ce1-a4ac85c662e9.gif?token=eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJ1cm46YXBwOjdlMGQxODg5ODIyNjQzNzNhNWYwZDQxNWVhMGQyNmUwIiwiaXNzIjoidXJuOmFwcDo3ZTBkMTg4OTgyMjY0MzczYTVmMGQ0MTVlYTBkMjZlMCIsIm9iaiI6W1t7InBhdGgiOiJcL2ZcLzEyY2JlOGE0LWY1NWMtNGI0MC04NWJiLWQ4ZTE0MDVlN2I4NFwvZGFrNnM3NC00NjUxNzFlNS0yN2RhLTRkZTgtOWNlMS1hNGFjODVjNjYyZTkuZ2lmIn1dXSwiYXVkIjpbInVybjpzZXJ2aWNlOmZpbGUuZG93bmxvYWQiXX0.HHcJ-g7f4_rV-Sot1muIyOxZH9mfMziA1-4nExOjFiU />"
+    ],
+    reply: [
+      {
+        question: "Думаю, нам стоит продолжить..",
+        answer: "chapter-one"
+      }
+    ]
+  },
+
+  // main conversation trunk
+  "chapter-one": {
+    says: [
+      "Отлично!",
+      "(Выберите один из пунктов)",
+      "Что вам нравиться больше ?"
+    ],
+    reply: [
+      {
+        question: "Усердная работа",
+        answer: "chapter-two" // here both replies send people onto the same next chapter
+      },
+      {
+        question: "Рациональность", // both replies send people onto the same next chapter
+        answer: "chapter-two"
+      },
+      {
+        question: "Не знаю что выбрать",
+        answer: "intro-context"
+      }
+    ]
+  },
+  "chapter-two": {
+    says: [
+      "Какой проект вам нравиться больше ?",
+      "<img src=https://images-wixmp-ed30a86b8c4ca887773594c2.wixmp.com/f/12cbe8a4-f55c-4b40-85bb-d8e1405e7b84/dcvtqsn-5a6e70bc-e8d8-4fd2-a2ab-37476aaee116.gif?token=eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJ1cm46YXBwOjdlMGQxODg5ODIyNjQzNzNhNWYwZDQxNWVhMGQyNmUwIiwiaXNzIjoidXJuOmFwcDo3ZTBkMTg4OTgyMjY0MzczYTVmMGQ0MTVlYTBkMjZlMCIsIm9iaiI6W1t7InBhdGgiOiJcL2ZcLzEyY2JlOGE0LWY1NWMtNGI0MC04NWJiLWQ4ZTE0MDVlN2I4NFwvZGN2dHFzbi01YTZlNzBiYy1lOGQ4LTRmZDItYTJhYi0zNzQ3NmFhZWUxMTYuZ2lmIn1dXSwiYXVkIjpbInVybjpzZXJ2aWNlOmZpbGUuZG93bmxvYWQiXX0.JW-6_O8egFDLuF1xdd4SWY6lFBta3E7i3OIlfE3AZIE />",
+      "Выберите один из вариантов...",
+      "...или нет"
+    ],
+    reply: [
+      {
+        question: "Сложный",
+        answer: "chapter-four"
+      },
+      {
+        question: "Инновационный",
+        answer: "chapter-three"
+      },
+      {
+        question: "Не могу определиться",
+        answer: "end" // an example of using the Escape Valve for ineligible, Not Applicable participants
+      }
+    ]
+  },
+
+  // this chapter is skipped
+  "chapter-three": {
+    // we skip this in this example to show you can do that; use it if you want.
+    says: [
+      "Отличный выбор",
+      "<img src=https://images-wixmp-ed30a86b8c4ca887773594c2.wixmp.com/f/12cbe8a4-f55c-4b40-85bb-d8e1405e7b84/d9w5t4m-1ff40629-3177-453f-9f14-12406932112e.gif?token=eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJ1cm46YXBwOjdlMGQxODg5ODIyNjQzNzNhNWYwZDQxNWVhMGQyNmUwIiwiaXNzIjoidXJuOmFwcDo3ZTBkMTg4OTgyMjY0MzczYTVmMGQ0MTVlYTBkMjZlMCIsIm9iaiI6W1t7InBhdGgiOiJcL2ZcLzEyY2JlOGE0LWY1NWMtNGI0MC04NWJiLWQ4ZTE0MDVlN2I4NFwvZDl3NXQ0bS0xZmY0MDYyOS0zMTc3LTQ1M2YtOWYxNC0xMjQwNjkzMjExMmUuZ2lmIn1dXSwiYXVkIjpbInVybjpzZXJ2aWNlOmZpbGUuZG93bmxvYWQiXX0.Neyu7LF49Sm25Zu8zDszXkAI04FA5Gj1wmspwQB88v4 />"
+    ],
+    reply: [
+      {
+        question: "Продолжим ?",
+        answer: "chapter-five"
+      }
+    ]
+  },
+
+  // continue with main conversation trunk
+  "chapter-four": {
+    says: [
+      "Интересный выбор",
+      "Нужно больше информации"
+    ],
+    reply: [
+      {
+        question: "Не могу согласиться",
+        answer: "end"
+      },
+      {
+        question: "Да, без проблем!",
+        answer: "chapter-five"
+      }
+    ]
+  },
+  "chapter-five": {
+    says: [
+      "Нам нравиться ваш подход...", // call a function to an external resource / application outside of chat-bubble's purview
+      "...и мы хотим с вами связаться в ближайшее время",
+    ],
+    reply: [
+      {
+        question: "Не интересно.",
+        answer: "end"
+      },
+      {
+        question: "Да, конечно!",
+        answer: "end2" // function name that will be executed
+      }
+    ]
+  },
+  end: {
+    says: [
+      "Спасибо за потраченное время",
+      "<img src=https://images-wixmp-ed30a86b8c4ca887773594c2.wixmp.com/f/12cbe8a4-f55c-4b40-85bb-d8e1405e7b84/da4lboo-fbc24a9d-c308-4e4a-8f29-f79dc1974067.gif?token=eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJ1cm46YXBwOjdlMGQxODg5ODIyNjQzNzNhNWYwZDQxNWVhMGQyNmUwIiwiaXNzIjoidXJuOmFwcDo3ZTBkMTg4OTgyMjY0MzczYTVmMGQ0MTVlYTBkMjZlMCIsIm9iaiI6W1t7InBhdGgiOiJcL2ZcLzEyY2JlOGE0LWY1NWMtNGI0MC04NWJiLWQ4ZTE0MDVlN2I4NFwvZGE0bGJvby1mYmMyNGE5ZC1jMzA4LTRlNGEtOGYyOS1mNzlkYzE5NzQwNjcuZ2lmIn1dXSwiYXVkIjpbInVybjpzZXJ2aWNlOmZpbGUuZG93bmxvYWQiXX0.H1tn4gkHNT2dHDEIArzaQsOynOi9fKeMi8mx9A_dscM >",
+      "Приходите к нам еще"
+    ],
+    reply: [
+      {
+        question: "Начать",
+        answer: "ice"
+      }
+    ]
+  },
+  end2: {
+    says: [
+      ";)",
+      "<img src=https://images-wixmp-ed30a86b8c4ca887773594c2.wixmp.com/f/12cbe8a4-f55c-4b40-85bb-d8e1405e7b84/datjp1z-fc3069a4-9ffc-40d0-861b-a53e6a267634.gif?token=eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJ1cm46YXBwOjdlMGQxODg5ODIyNjQzNzNhNWYwZDQxNWVhMGQyNmUwIiwiaXNzIjoidXJuOmFwcDo3ZTBkMTg4OTgyMjY0MzczYTVmMGQ0MTVlYTBkMjZlMCIsIm9iaiI6W1t7InBhdGgiOiJcL2ZcLzEyY2JlOGE0LWY1NWMtNGI0MC04NWJiLWQ4ZTE0MDVlN2I4NFwvZGF0anAxei1mYzMwNjlhNC05ZmZjLTQwZDAtODYxYi1hNTNlNmEyNjc2MzQuZ2lmIn1dXSwiYXVkIjpbInVybjpzZXJ2aWNlOmZpbGUuZG93bmxvYWQiXX0.3wHOSA8fr6drprY3vNEo-4rCuIpzJlStCJtNg3iJR2o >",
+      "Будем вас ждать"
+    ],
+    reply: [
+      {
+        question: "Конец",
+        answer: "externalResourceFunction"
+      }
+    ]
+  }
+} // end conversation object
+
+// initialize by constructing a named function...
+var chatWindow = new Bubbles(
+  document.getElementById("chat"), // ...passing HTML container element...
+  "chatWindow" // ...and name of the function as a parameter
+)
+
+// `.talk()` will get your bot to begin the conversation
+chatWindow.talk(
+  // pass your JSON/JavaScript object to `.talk()` function where
+  // you define how the conversation between the bot and user will go
+  convo
+)
+
+// this function is called when user clicks "Yes!" in the "chapter-four" dialogue
+externalResourceFunction = function() {
+  // together with the function we'll restart the conversation starting from "capther-four"
+  // to make sure the user isn't left hanging after the function below has been executed
+  chatWindow.talk(convo, "chapter-four")
+
+  // function that opens external window
+  window.open(
+    "https://images-wixmp-ed30a86b8c4ca887773594c2.wixmp.com/f/12cbe8a4-f55c-4b40-85bb-d8e1405e7b84/d9tvnj0-ab538806-620d-4f33-a7e1-eacac3c0b06d.gif?token=eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJ1cm46YXBwOjdlMGQxODg5ODIyNjQzNzNhNWYwZDQxNWVhMGQyNmUwIiwiaXNzIjoidXJuOmFwcDo3ZTBkMTg4OTgyMjY0MzczYTVmMGQ0MTVlYTBkMjZlMCIsIm9iaiI6W1t7InBhdGgiOiJcL2ZcLzEyY2JlOGE0LWY1NWMtNGI0MC04NWJiLWQ4ZTE0MDVlN2I4NFwvZDl0dm5qMC1hYjUzODgwNi02MjBkLTRmMzMtYTdlMS1lYWNhYzNjMGIwNmQuZ2lmIn1dXSwiYXVkIjpbInVybjpzZXJ2aWNlOmZpbGUuZG93bmxvYWQiXX0.ooF3_xZmJGQVVngHQdrNgPz094XlnlvZe2Ff1cLxLJw",
+    "_blank",
+    "toolbar=no,scrollbars=no,menubar=no,resizable=no,location=no,titlebar=no,width=300,height=600"
+  )
+}
+</script>
+</body>
+
+</html>
