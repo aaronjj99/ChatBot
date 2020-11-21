@@ -1,23 +1,23 @@
 #HR ChatBot
 Chat Bot with Admin Panel
 
-Всем привет! У меня была необходимость написать бота, но бота не стандартного, и честно говоря:
-сколько я искал, на гитхабе ничего подобного не нашел, по этому решил написать сам.
+Hello! I had a need to write a bot, but not a standard bot, and to be honest:
+how much I searched, I did not find anything like this on github, but decided to write it myself
 
-Что мне было необходимо:
-  >Что бы ответы выдавались по очереди, внезависимости от ответа
-  >и на определенный ответ мне выдавалось определенной сообщение, и после ответа ветка шла дальше, отталкиваясь от того места на которое мы перепрыгнули.
+What I needed:
+  > So that the answers are given in turn, regardless of the answer
+  > and for a certain answer, I was given this message, and after the answer, the branch went further, starting from the place to which we jumped.
 
 ![chatbot](https://i.ibb.co/SdTVv83/e9978c58-4f0f-40f0-9053-7ba941a7b5ec.jpg)
 
-В боте присутствует Админ Панель для редактирования, добавления, и изменения вопросов и ответов.
-> Админ Панель находится в function.php
+The bot has an Admin Panel for editing, adding and changing questions and answers.
+> Admin Panel is in "function.php"
 
 ![chatbotadmin](https://i.ibb.co/4YG444r/Screenshot-4.png)
 
-Так же я решил что неплохо было бы хранить все сообщения пользователей, и для этого я использовал Firebase.
+I also decided that it would be nice to store all user messages, and for this I used Firebase.
 
 ![chatbotadmin](https://i.ibb.co/QMDPWdY/57f05032-3156-4057-b16c-2c0faefc0405.jpg)
 
->Подключение к Firebase происходит в файле index.php & firebase.js, кому как удобней.
-В боте две базы данных MySQL & Firebase, подключение к MySQL происходит в файле database.php.
+> Connection to Firebase occurs in the index.php & firebase.js file, whichever is more convenient.
+The bot has two databases MySQL and Firebase, the connection to MySQL is made in the database.php file.
