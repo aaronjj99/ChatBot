@@ -2,7 +2,7 @@
 Chat Bot with Admin Panel
 
 Hello! I had a need to write a bot, but not a standard bot, and to be honest:
-how much I searched, I did not find anything like this on github, but decided to write it myself
+how much I searched, I did not find anything like this on github, and decided to write it myself
 
 What I needed:
   > So that the answers are given in turn, regardless of the answer
