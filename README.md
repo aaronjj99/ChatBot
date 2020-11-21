@@ -5,8 +5,8 @@ Hello! I had a need to write a bot, but not a standard bot, and to be honest:
 how much I searched, I did not find anything like this on github, and decided to write it myself.
 
 What I needed:
-  > So that the answers are given in turn, regardless of the answer
-  > and for a certain answer, I was given this message, and after the answer, the branch went further, starting from the place to which we jumped.
+  > So that the answers are given in turn regardless of the answer, but for a certain answer i was give another message, 
+  > and after the answer, the branch went further, starting from the place to which we jumped.
 
 ![chatbot](https://i.ibb.co/SdTVv83/e9978c58-4f0f-40f0-9053-7ba941a7b5ec.jpg)
 
