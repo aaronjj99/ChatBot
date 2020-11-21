@@ -3,6 +3,8 @@ Chat Bot with Admin Panel
 
 [Demo](http://dev.ufs-grup.com "chatbot")
 «*»or clik at link <<http://dev.ufs-grup.com/>>
+[Admin Panel](http://dev.ufs-grup.com/function.php "chatbot")
+[Message Data](http://dev.ufs-grup.com/list.php "chatbot")
 
 Hello! I had a need to write a bot, but not a standard bot, and to be honest:
 how much I searched, I did not find anything like this on github, and decided to write it myself.
